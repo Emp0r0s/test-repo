@@ -15,7 +15,12 @@ def get_db_connection():
     except Exception as e:
         print("Error connecting to the database:", e)
         return None
-#123
+
+@app.route('/hello')
+def get_data():
+    return "Hello World"
+
+
 @app.route('/get_data', methods=['GET'])
 def get_data():
     try:
