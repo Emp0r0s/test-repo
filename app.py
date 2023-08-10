@@ -17,7 +17,7 @@ def get_db_connection():
         return None
 
 @app.route('/hello')
-def get_data():
+def hello():
     return "Hello World"
 
 
