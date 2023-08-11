@@ -1,11 +1,21 @@
 from flask import Flask, request, jsonify
 import pyodbc
 import os
+from azure.keyvault.secrets import SecretClient
+from azure.identity import DefaultAzureCredential
 
 app = Flask(__name__)
 
+VAULT_URL = "https://dbsecrets-11.vault.azure.net/"
+
+credential = DefaultAzureCredential()
+secret_client = SecretClient(vault_url=VAULT_URL, credential=credential)
+
+# Fetch secrets from Azure Key Vault
+db_connect = secret_client.get_secret(name="dbconnect").value
+
 # Get the Azure SQL Database connection string from environment variables
-connection_string = os.environ.get('SQLCONNSTR_mydbconnection')
+connection_string = db_connect
 # Function to establish a database connection
 def get_db_connection():
     try:
@@ -15,7 +25,7 @@ def get_db_connection():
         print("Error connecting to the database:", e)
         return None
 
-@app.route('/hello')
+@app.route('/')
 def hello():
     return "Hello World"
 
